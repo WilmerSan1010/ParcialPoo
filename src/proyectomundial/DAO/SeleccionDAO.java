@@ -4,7 +4,11 @@
  */
 package proyectomundial.DAO;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import proyectomundial.model.Seleccion;
@@ -20,32 +24,32 @@ public class SeleccionDAO {
     public SeleccionDAO() {
         BasedeDatos.conectar();
     }
-    
+
     public boolean registrarSeleccion(Seleccion seleccion) {
-        
+
         String sql = "INSERT INTO poo.seleccion (nombre, continente, dt, nacionalidad) values("
-                + "'" + seleccion.getNombre() + "', " 
-                + "'" + seleccion.getContinente() + "', " 
-                + "'" + seleccion.getDt() + "', " 
+                + "'" + seleccion.getNombre() + "', "
+                + "'" + seleccion.getContinente() + "', "
+                + "'" + seleccion.getDt() + "', "
                 + "'" + seleccion.getNacionalidad() + "')";
-        
+
         //BasedeDatos.conectar();
         boolean registro = BasedeDatos.ejecutarActualizacionSQL(sql);
         //BasedeDatos.desconectar();
         return registro;
     }
-    
+
     public List<Seleccion> getSelecciones() {
-        
+
         String sql = "SELECT nombre, continente, dt, nacionalidad FROM poo.seleccion";
         List<Seleccion> selecciones = new ArrayList<Seleccion>();
-        
+
         try {
             ResultSet result = BasedeDatos.ejecutarSQL(sql);
-            
-            if(result != null) {
-            
-                while (result.next()) { 
+
+            if (result != null) {
+
+                while (result.next()) {
                     Seleccion seleccion = new Seleccion(result.getString("nombre"), result.getString("continente"), result.getString("dt"), result.getString("nacionalidad"));
                     selecciones.add(seleccion);
                 }
@@ -54,20 +58,17 @@ public class SeleccionDAO {
             System.out.println(e.toString());
             System.out.println("Error consultando selecciones");
         }
-        
+
         return selecciones;
     }
-    
-    
+
     public String[][] getSeleccionesMatriz() {
-        
+
         String[][] matrizSelecciones = null;
         List<Seleccion> selecciones = getSelecciones();
-        
-        
-        if(selecciones != null && selecciones.size() > 0) {
-            
-        
+
+        if (selecciones != null && selecciones.size() > 0) {
+
             matrizSelecciones = new String[selecciones.size()][4];
 
             int x = 0;
@@ -80,7 +81,23 @@ public class SeleccionDAO {
                 x++;
             }
         }
-        
+
         return matrizSelecciones;
     }
+
+    public  boolean validandoUsuario(String usuario, String contraseña) {
+        String Url = "jdbc:postgresql://dpg-cfpuu1qrrk0fd9ounopg-a.oregon-postgres.render.com:5432/unisimon";
+        String USUARIO = "unisimon_user";
+        String CONTRASEÑA = "11k1WiZg5ekiFQYHx9Bog6W7cTArSZea";
+
+        try ( Connection connection = DriverManager.getConnection(Url, USUARIO, CONTRASEÑA);  Statement statement = connection.createStatement()) {
+            String query = "SELECT * FROM users WHERE username = '" + usuario + "' AND password = '" + contraseña + "'";
+            ResultSet resultSet = statement.executeQuery(query);
+            return resultSet.next(); // Si hay una fila de resultado, las credenciales son válidas
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Si ocurre algún error, se considera que las credenciales no son válidas
+    }
+   
 }
