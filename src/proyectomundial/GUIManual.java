@@ -29,9 +29,7 @@ import proyectomundial.model.Seleccion;
 public class GUIManual extends JFrame {
 
     SeleccionDAO seleccionDAO = new SeleccionDAO();
-    String textoUser="pepito";
-    
-     String textoContra="buenaSuerte";
+
     // Matrix que permite almancenar la información de las selecciones futbol cargadas
     public String[][] selecciones = null;
 
@@ -218,6 +216,7 @@ public class GUIManual extends JFrame {
         btonSesion.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 System.out.println("sesion");
+               
                 accionSesion();
 
             }
@@ -233,14 +232,16 @@ public class GUIManual extends JFrame {
         String textoContra = JOptionPane.showInputDialog(null, "Ingrese la contraseña:");
 
         // Mostrar el texto ingresado en un cuadro de diálogo
-        
-        if (seleccionDAO.validandoUsuario(textoUser, textoContra)) {
+        boolean validarSesion = seleccionDAO.validandoUsuario(textoUser, textoContra);
+        if (validarSesion) {
             JOptionPane.showMessageDialog(null, "Las credenciales son válidas.");
+            haySesion=true;
 
         } else {
             JOptionPane.showMessageDialog(null, "Las credenciales no son válidas.");
+            haySesion=false;
         }
-        
+
         jPanelMain.add(sesionInicio);
 
         jPanelMain.removeAll();

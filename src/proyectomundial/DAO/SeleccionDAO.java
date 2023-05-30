@@ -91,7 +91,7 @@ public class SeleccionDAO {
         String CONTRASEÑA = "11k1WiZg5ekiFQYHx9Bog6W7cTArSZea";
 
         try ( Connection connection = DriverManager.getConnection(Url, USUARIO, CONTRASEÑA);  Statement statement = connection.createStatement()) {
-            String query = "SELECT * FROM users WHERE username = '" + usuario + "' AND password = '" + contraseña + "'";
+            String query = "SELECT * FROM poo.users WHERE username = '" + usuario + "' AND password = '" + contraseña + "'";
             ResultSet resultSet = statement.executeQuery(query);
             return resultSet.next(); // Si hay una fila de resultado, las credenciales son válidas
         } catch (SQLException e) {
